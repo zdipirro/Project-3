@@ -55,10 +55,8 @@ if ($action == 'login') {
   else {
   session_start();
   $_SESSION['email'] = $email;
-  header('Location: profile.php');
+  include("profile.php");
   }
   
 }
-
-if 
 ?>
