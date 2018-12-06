@@ -24,6 +24,51 @@ if ($action == 'display_login') {
 elseif ($action == 'display_registration') {
   include("view/display_registration.php");
 }
+
+elseif ($action == 'register') {
+  $first = filter_input(INPUT_POST, 'first');
+  $last = filter_input(INPUT_POST, 'last');
+  $bday = filter_input(INPUT_POST, 'bday');
+  $email = filter_input(INPUT_POST, 'email');
+  $pass = filter_input(INPUT_POST, 'pass');
+  $passlength = strlen($pass);
+  
+  if (empty($first)) {
+    echo "You forgot to enter your first name<br><br>";
+  }
+  
+  if (empty($last)) {
+    echo "You forgot to enter your last name<br><br>";
+  }
+    
+  if (empty($bday)) {
+    echo "You forgot to enter your first name<br><br>";
+  }
+  
+  if (empty($email)) {
+    echo "You forgot to enter you email address<br><br>";
+  }
+  else {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      echo "You entered an invalid email address<br><br>";
+    }
+  }
+  
+  if (empty($pass)) {
+    echo "You forgot to enter your password<br><br>";
+  }
+  else {
+    if ($passlength < 8) {
+      echo "Password must be at least 8 characters long<br><br>"; 
+    }
+  } 
+$f = new Accounts();
+$f->CreateUser($bday, $email, $first, $last, $pass);
+session_start();
+$_SESSION['email'] = $email; 
+header('Location: index.php?action=display_questions');
+}
+
 elseif ($action == 'login') {
   $db = new PDO($dsn, $username, $password);
   $email = filter_input(INPUT_POST, 'email');
@@ -76,6 +121,53 @@ elseif ($action == 'display_new_question') {
   include("view/display_new_question.php");
 }
 
+else if ($action == 'editQuestion') {
+    $id = filter_input(INPUT_POST, 'id',FILTER_VALIDATE_INT);
+    $d = new Questions();
+    $quesdata = $d->getQuestionData($id);
+    if ($id == NULL || $id == FALSE ) {
+        echo "Missing or incorrect id.";
+    } else {
+        include('view/edit_question.php');
+    }
+}
+
+else if ($action == 'updateQuestion') {
+  $id = filter_input(INPUT_POST, 'id',FILTER_VALIDATE_INT);
+  $qname = filter_input(INPUT_POST, 'qname');
+  $qbody = filter_input(INPUT_POST, 'qbody');
+  $qskills = filter_input(INPUT_POST, 'qskills');
+  $array = array($qskills);
+  $skills = implode(', ', $array);
+  $qnlength = strlen($qname);
+  $qblength = strlen($qbody);
+  $qslength = count($skills);
+
+  if (empty($qname)) {
+    echo "You forgot to enter the name of your question<br><br>";
+    $errors +=1;
+  }
+  else {
+    if ($qnlength < 3) {
+      echo "Question name must be at least 3 characters long<br><br>";
+      $errors +=1;
+    }
+  }
+
+  if (empty($qbody)) {
+    echo "You forgot to enter information into the question body<br><br>";
+    $errors +=1;
+  }
+  else {
+    if ($qblength > 500) {
+      echo "Question body has a maximum length of 500 characters<br><br>"; 
+      $errors +=1;
+    }
+  }
+  $u = new Questions();
+  $u->updateQuestion($id, $qname, $qbody, $skills);
+  header("Location: index.php?action=display_questions");
+}
 elseif ($action == 'create_new_question') {
   $qname = filter_input(INPUT_POST, 'qname');
   $qbody = filter_input(INPUT_POST, 'qbody');
@@ -115,5 +207,18 @@ elseif ($action == 'create_new_question') {
   $statement->closeCursor();
   header('Location: index.php?action=display_questions');
 
+}
+
+else if ($action == 'deleteQuestion') {
+  $id = filter_input(INPUT_POST, 'id',FILTER_VALIDATE_INT);
+  $email = filter_input( INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+  if ($id == NULL || $id == FALSE || $email == NULL || $email == FALSE ) {
+    echo "Missing or incorrect product id or category id.";
+  } 
+  else {
+    $d = new Questions();
+    $d->deleteQuestion($id);
+    header("Location: index.php?action=display_questions");
+  }
 }
 ?>

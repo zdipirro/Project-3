@@ -12,6 +12,7 @@ if ( $getUser > 0) {
 else {
     echo ' Email does not exist';
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -27,6 +28,11 @@ else {
    <div id = "menu">
    <a href="logout.php">Logout</a>
    </div>
+   <?php 
+   if(count($getQuestions) < 1) {
+    echo "<h3> You currently have no questions asked.</h3>";
+   }
+   ?>
    <table>
     <tr class="title">
         <td>Title</td><td>Body</td><td>Skills</td><td>&nbsp;</td><td>&nbsp;</td>

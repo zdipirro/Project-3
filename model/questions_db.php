@@ -43,14 +43,35 @@ class Questions {
     return $ques;
   }
   
-  public static function deleteProduct($ques_id) {
+  public static function deleteQuestion($id) {
     global $db;
-    $queryd = 'DELETE FROM questions WHERE id = :ques_id';
-    $statement = $db->prepare($queryd);
-    $statement->bindValue(':ques_id', $ques_id);
+    $query = "DELETE FROM questions WHERE id = '$id'";
+    $statement = $db->prepare($query);
     $statement->execute();
     $statement->closeCursor();
-    }
+  }
+  
+  public static function getQuestionData($id){
+    global $db;
+    $query = "SELECT * FROM questions where id = '$id'";
+    $q = $db->prepare($query);
+    $q->execute();
+    $results = $q->fetchAll();
+    $q->closeCursor();
+    return $results;
+  }
+  
+  public static function updateQuestion($id, $qname, $qbody, $skills){
+    global $db;
+        $query = "UPDATE questions SET title = :qname, body= :qbody, skills = :qskills where id = '$id'";
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':qname', $qname);
+        $stmt->bindValue(':qbody', $qbody);
+        $stmt->bindValue(':qskills', $skills);
+        $stmt->execute();
+        $stmt->closeCursor();
+
+  }
 }
 
 
