@@ -80,3 +80,12 @@ body {
   width: 800px;
   margin-left: 100px;
 }
+
+table,td{
+    border:1px black solid;
+    alignment: center;
+}
+
+.title{
+    font-weight:bold;
+}

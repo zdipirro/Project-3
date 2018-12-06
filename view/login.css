@@ -53,7 +53,7 @@ body {
   margin: auto;
 }
 
-.logbutton button[type = "submit"] {
+.logbutton input[type = "submit"] {
   border: none;
   outline: none;
   height: 30px;

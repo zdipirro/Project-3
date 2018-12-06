@@ -2,6 +2,6 @@
 
 session_start();
 session_destroy();
-header('Location: view/login_view.php');
+header('Location: index.php?action=display_login');
 
 ?>
